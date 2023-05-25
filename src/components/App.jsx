@@ -4,10 +4,17 @@ import { ContactList } from './Contacts/ContactList';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { StyledLayout } from './Layout/Layout.styled';
-import { StyledContactsTitle, StyledTitle } from './App.styled';
+import {
+  StyledPhonebookWrap,
+  StyledContactsTitle,
+  StyledTitle,
+  StyledTitleWrap,
+} from './App.styled';
 import { addContact, deleteContact } from 'redux/contactsSlice';
 import { setFilter } from 'redux/filtersSlice';
 import { getContacts, getFilter } from 'redux/selectors';
+import { FaBook } from 'react-icons/fa';
+import { IoMdContacts } from 'react-icons/io';
 
 export const App = () => {
   const contacts = useSelector(getContacts);
@@ -32,14 +39,24 @@ export const App = () => {
 
   return (
     <StyledLayout>
-      <StyledTitle>Phonebook</StyledTitle>
-      <ContactForm addContactToList={addContactToList} contacts={contacts} />
-      <StyledContactsTitle>Contacts</StyledContactsTitle>
-      <Filter searchContact={changeFilter} />
-      <ContactList
-        contacts={filtredContacts}
-        deleteContactfromList={deleteContactfromList}
-      />
+      <StyledPhonebookWrap>
+        <StyledTitleWrap>
+          <StyledTitle>Phonebook</StyledTitle>
+          <FaBook />
+        </StyledTitleWrap>
+
+        <ContactForm addContactToList={addContactToList} contacts={contacts} />
+        <StyledTitleWrap>
+          <StyledContactsTitle>Contacts</StyledContactsTitle>
+          <IoMdContacts />
+        </StyledTitleWrap>
+
+        <Filter searchContact={changeFilter} />
+        <ContactList
+          contacts={filtredContacts}
+          deleteContactfromList={deleteContactfromList}
+        />
+      </StyledPhonebookWrap>
     </StyledLayout>
   );
 };

@@ -1,5 +1,10 @@
-import { StyledContactList, StyledContactsItem } from './ContactList.styled';
-
+import {
+  StyledContactList,
+  StyledContactsItem,
+  StyledDeleteBtn,
+  StyledNumber,
+} from './ContactList.styled';
+import { MdClose } from 'react-icons/md';
 export const ContactList = ({ contacts, deleteContactfromList }) => {
   return (
     <StyledContactList>
@@ -8,11 +13,11 @@ export const ContactList = ({ contacts, deleteContactfromList }) => {
           <StyledContactsItem key={contact.id}>
             <p>
               {contact.name}
-              <span>{contact.number}</span>
+              <StyledNumber>{contact.number}</StyledNumber>
             </p>
-            <button onClick={() => deleteContactfromList(contact.id)}>
-              Delete
-            </button>
+            <StyledDeleteBtn onClick={() => deleteContactfromList(contact.id)}>
+              <MdClose />
+            </StyledDeleteBtn>
           </StyledContactsItem>
         );
       })}
