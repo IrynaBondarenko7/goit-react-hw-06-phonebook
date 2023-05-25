@@ -1,70 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ContactList } from './Contacts/ContactList';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { StyledLayout } from './Layout/Layout.styled';
 import { StyledContactsTitle, StyledTitle } from './App.styled';
-
-const initialContacts = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+import { addContact, deleteContact } from 'redux/contactsSlice';
+import { setFilter } from 'redux/filtersSlice';
+import { getContacts, getFilter } from 'redux/selectors';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts !== null) {
-      return JSON.parse(savedContacts);
-    } else {
-      return initialContacts;
-    }
-  });
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
 
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const addContact = value => {
-    setContacts(prevState => {
-      return [...prevState, value];
-    });
+  const addContactToList = value => {
+    dispatch(addContact(value));
   };
   const changeFilter = evt => {
-    setFilter(evt.currentTarget.value);
+    dispatch(setFilter(evt.currentTarget.value));
   };
-  const deleteContact = id => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== id));
+  const deleteContactfromList = id => {
+    dispatch(deleteContact(id));
   };
 
   const normalizedFilter = filter.toLowerCase();
-  const filtredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(normalizedFilter)
+  const filtredContacts = contacts.filter(
+    contact =>
+      contact.name && contact.name.toLowerCase().includes(normalizedFilter)
   );
 
   return (
     <StyledLayout>
       <StyledTitle>Phonebook</StyledTitle>
-      <ContactForm addContact={addContact} contacts={contacts} />
+      <ContactForm addContactToList={addContactToList} contacts={contacts} />
       <StyledContactsTitle>Contacts</StyledContactsTitle>
-      <Filter filter={filter} searchContact={changeFilter} />
-      <ContactList contacts={filtredContacts} deleteContact={deleteContact} />
+      <Filter searchContact={changeFilter} />
+      <ContactList
+        contacts={filtredContacts}
+        deleteContactfromList={deleteContactfromList}
+      />
     </StyledLayout>
   );
 };
 ContactForm.propTypes = {
-  addContact: PropTypes.func,
+  addContactToList: PropTypes.func,
   contacts: PropTypes.array.isRequired,
 };
 Filter.propTypes = {
-  filter: PropTypes.string,
   searchContact: PropTypes.func,
 };
 ContactList.propTypes = {
   contacts: PropTypes.array.isRequired,
-  deleteContact: PropTypes.func,
+  deleteContactfromList: PropTypes.func,
 };

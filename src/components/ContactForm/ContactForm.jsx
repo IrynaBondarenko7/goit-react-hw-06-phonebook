@@ -1,6 +1,6 @@
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { nanoid } from 'nanoid';
+
 import {
   ErrorMessage,
   Form,
@@ -18,7 +18,7 @@ const ContactsSchema = Yup.object().shape({
   number: Yup.number().required(),
 });
 
-export const ContactForm = ({ addContact, contacts }) => {
+export const ContactForm = ({ addContactToList, contacts }) => {
   return (
     <Formik
       initialValues={{
@@ -35,7 +35,8 @@ export const ContactForm = ({ addContact, contacts }) => {
           alert(`${values.name} is alredy in contacts`);
           return;
         }
-        addContact({ ...values, id: nanoid() });
+
+        addContactToList(values);
         resetForm({ values: { name: '', number: '' } });
       }}
     >
