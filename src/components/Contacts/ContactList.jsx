@@ -1,3 +1,4 @@
+import { useSelector, useDispatch } from 'react-redux';
 import {
   StyledContactList,
   StyledContactsItem,
@@ -5,10 +6,27 @@ import {
   StyledNumber,
 } from './ContactList.styled';
 import { MdClose } from 'react-icons/md';
-export const ContactList = ({ contacts, deleteContactfromList }) => {
+import { getContacts, getFilter } from 'redux/selectors';
+import { deleteContact } from 'redux/contactsSlice';
+
+export const ContactList = () => {
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const normalizedFilter = filter.toLowerCase();
+  const filtredContacts = contacts.filter(
+    contact =>
+      contact.name && contact.name.toLowerCase().includes(normalizedFilter)
+  );
+
+  const deleteContactfromList = id => {
+    dispatch(deleteContact(id));
+  };
+
   return (
     <StyledContactList>
-      {contacts.map(contact => {
+      {filtredContacts.map(contact => {
         return (
           <StyledContactsItem key={contact.id}>
             <p>

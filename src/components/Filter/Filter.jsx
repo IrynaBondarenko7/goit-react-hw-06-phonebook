@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getFilter } from 'redux/selectors';
 import {
   StyledFilterTextWrap,
@@ -6,10 +6,15 @@ import {
   StyledInput,
 } from './Filter.styled';
 import { MdPersonSearch } from 'react-icons/md';
+import { setFilter } from 'redux/filtersSlice';
 
-export const Filter = ({ searchContact }) => {
+export const Filter = () => {
   const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
 
+  const changeFilter = evt => {
+    dispatch(setFilter(evt.currentTarget.value));
+  };
   return (
     <StyledFiltrWrap>
       <b>Find contacts by name</b>
@@ -17,7 +22,7 @@ export const Filter = ({ searchContact }) => {
         <StyledInput
           type="text"
           value={filter}
-          onChange={searchContact}
+          onChange={changeFilter}
           placeholder="Search name..."
         />
         <MdPersonSearch />

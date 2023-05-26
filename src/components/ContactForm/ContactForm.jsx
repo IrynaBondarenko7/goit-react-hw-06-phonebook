@@ -1,4 +1,5 @@
 import { Formik, Field } from 'formik';
+import { useSelector, useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 import { FcPlus } from 'react-icons/fc';
 
@@ -11,6 +12,8 @@ import {
   StyledNumberTextWrap,
   StyledTextWrap,
 } from './ContactForm.styled';
+import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
 
 const ContactsSchema = Yup.object().shape({
   name: Yup.string()
@@ -22,7 +25,14 @@ const ContactsSchema = Yup.object().shape({
   number: Yup.number().required(),
 });
 
-export const ContactForm = ({ addContactToList, contacts }) => {
+export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const addContactToList = value => {
+    dispatch(addContact(value));
+  };
+
   return (
     <Formik
       initialValues={{
